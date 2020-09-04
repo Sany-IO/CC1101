@@ -2,20 +2,9 @@ CC1101
 ======
 
 driver library for Ti CC1100 / CC1101.<br />
-Contains Lib for Arduino and Raspberry Pi.<br />
+Contains Lib for STM32L0xx MCU and Raspberry Pi.<br />
 Note: Raspi need wiringPi<br />
 
-a compatible and tested library for TI MSP430 is provided by abhra0897. <br />
-https://github.com/abhra0897/msp430_cc1101_energia_v2 <br />
-
-
-Donation
-========
-
-If you are happy with the library and you want to
-spend me a beer, please feel free to use the following link. ;)
-
-https://www.paypal.me/bringmichzumschotter
 
 
 Hardware connection
