@@ -7,6 +7,8 @@ The STM32 Library is actually under development, but it runs including with Slee
 actually i develop a function, to download automatically the actual firmware for the device it's self, from a master station.
 later, can you update your firmware over RF, with packet control, and sleeping to save battery.
 
+you can donate to respect our work... https://paypal.me/sany1984
+
 Hardware connection
 ===================
 
