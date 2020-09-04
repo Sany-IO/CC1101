@@ -1,30 +1,30 @@
-CC1101
+CC1101 for STM32L0xx 32-bit MCU and RaspberryPI
 ======
 
-driver library for Ti CC1100 / CC1101.<br />
-Contains Lib for STM32L0xx MCU and Raspberry Pi.<br />
-Note: Raspi need wiringPi<br />
+This is a CC1101 Library for the STM32L0xx Ulta-Low-Power 32-bit MCU, and the originally RaspberryPI Library from Spaceteddy.
+The STM32 Library is actually under development, but it runs including with Sleep-Mode.
 
-
+actually i develop a function, to download automatically the actual firmware for the device it's self, from a master station.
+later, can you update your firmware over RF, with packet control, and sleeping to save battery.
 
 Hardware connection
 ===================
 
-check cc1101_arduino.h and/or cc1101_raspi.h for Pin description
+check cc1101_stm32l0xx.h and/or cc1101_raspi.h for Pin description
 
 CC1101 Vdd = 3.3V
 CC1101 max. digital voltage level = 3.3V (not 5V tolerant)
 
 ```
-CC1101<->Arduino
+CC1101<->STM32L0xx
 
 Vdd    -    3.3V
-SI     -    MOSI (11)
-SO     -    MISO (12)
-CS     -    SS   (10)
-SCLK   -    SCK  (13)
-GDO2   -    GPIO ( 3)
-GDO0   -    not used in this demo
+SI     -    MOSI PA7 (PIN13)
+SO     -    MISO PA6 (PIN12)
+CS     -    SS   PA4 (PIN10)
+SCLK   -    SCK  PA5 (PIN11)
+GDO2   -    GPIO_EXTI15 PA15 (PIN23)
+GDO0   -    GPIO_EXTI10 PA10 (PIN20) actually not used...
 GND    -    GND
 
 
@@ -58,19 +58,19 @@ TX Bytes example:<br />
 Basic configuration
 ===================
 
-use **uint8_t CC1100::begin(volatile uint8_t &My_addr)** always as first configuration step. For Arduino devices, this function returns the device address, which was already stored in the Arduino EEPROM.
+use **uint8_t rf_begin(volatile uint8_t &My_addr)** always as first configuration step. For Arduino devices, this function returns the device address, which was already stored in the Arduino EEPROM.
 
 Device address
 --------------
 you should set a unique device address for the transmitter and a unique device address for the receiver. 
-This can be done with **void CC1100::set_myaddr(uint8_t addr)**.
+This can be done with **void rf_set_myaddr(uint8_t addr)**.
 
 i.E. -> TX = 0x01 ; RX = 0x03
 
 
 Modulation modes
 ----------------
-the following modulation modes can be set by **void CC1100::set_mode(uint8_t mode)**. Transmitter and receiver must have the same Mode setting.
+the following modulation modes can be set by **void rf_set_mode(uint8_t mode)**. Transmitter and receiver must have the same Mode setting.
 
 ```
 1 = GFSK_1_2_kb
@@ -83,7 +83,7 @@ the following modulation modes can be set by **void CC1100::set_mode(uint8_t mod
 
 ISM frequency band
 ------------------
-you can set a frequency operation band by **void CC1100::set_ISM(uint8_t ism_freq)** to make it compatible with your hardware.
+you can set a frequency operation band by **void rf_set_ISM(uint8_t ism_freq)** to make it compatible with your hardware.
 
 ```
 1 = 315
@@ -92,26 +92,15 @@ you can set a frequency operation band by **void CC1100::set_ISM(uint8_t ism_fre
 4 = 915
 ```
 
-Arduino specific
+STM32L0xx specific
 ================
 
-CC1101 RF settings must be stored in the Arduino EEPROM to have maximum flexibility with different mode settings and reduced memory usage.
-Follow the following steps, how to store the compiled EEPROM file (*.eep) to your Arduino EEPROM. From my experience, you have to repeat this step only, if you have changed the Arduino Version, because the gcc compiler defines the location of the eeprom settings.
+CC1101 RF settings are stored in Firmware/Flash, or can changed remotely over RF, with a sender.
 
-- compile the tx_demo or rx_demo example sketch
-- remember the path of your compiled output data (Arduino *.hex file and *.eep file)
-- use the python eeprom_create.py to generate the eeprom array for the eeprom_write.ino
-  This is needed because the compiler can choose the EEPROM position by its own.
-- usage: ``` ./eeprom_create.py <input *.eep file> ```
-- you get an output file with like *.array
-- open that file and copy the array content into the eeprom_write.ino sketch at the correct position
-- compile the eeprom_write.ino sketch
-- upload into to your connected arduino hardware
-- open the Arduino Serial console, set the baudrate to 38400 and restart your arduino hardware
-- type the character ```w``` to the input field and press the sent button
-- wait till eeprom is written
-- sent ```r``` to verify that eeprom is written.
-- if your EEPROM data is written correct, you can compile and upload the RX_Demo or TX_Demo sketch to that hardware
+STM32L0xx specific
+================
+Bootloader Mode for Flashing Firmware over RF (in Development, BETA)
+
 
 
 Raspberry Pi
